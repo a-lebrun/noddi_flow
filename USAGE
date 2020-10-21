@@ -1,0 +1,46 @@
+Nextflow NODDI pipeline
+=======================
+
+Run the NODDI pipeline, including estimation of the parameters
+
+USAGE
+
+nextflow run main.nf [OPTIONAL_ARGUMENTS] --input
+
+DESCRIPTION
+
+    --input=/path/to/[root]             Root folder containing multiple subjects, with the following files.
+
+                                        [input]
+                                        ├── sub1
+                                        │   ├── ad.nii.gz
+                                        │   ├── brain_mask.nii.gz
+                                        │   ├── bval
+                                        │   ├── bvec
+                                        │   ├── dwi.nii.gz
+                                        │   ├── fa.nii.gz
+                                        │   └── md.nii.gz
+                                        └── sub2
+                                            ├── ad.nii.gz
+                                            ├── brain_mask.nii.gz
+                                            ├── bval
+                                            ├── bvec
+                                            ├── dwi.nii.gz
+                                            ├── fa.nii.gz
+                                            └── md.nii.gz
+
+Files should come out of the Tractoflow pipeline, with the following source:
+- dwi.nii.gz: from Resample_DWI
+- ad.nii.gz, fa.nii.gz, md.nii.gz: DTI_Metrics
+- brain_mask.nii.gz: from Resample_B0
+- bval/bvec: from Eddy_Topup
+
+
+OPTIONAL ARGUMENTS (current value)
+
+--noddi_nb_threads                         Number of threads to use for NODDI. Works best with 1. ($noddi_nb_threads).
+
+NOTES
+
+The intermediate working directory is, by default, set to './work'.
+To change it, use the '-w WORK_DIR' argument.
