@@ -1,6 +1,7 @@
 #!/usr/bin/env nextflow
 
 params.input = false
+params.load_kernels = false
 params.help = false
 
 if(params.help) {
@@ -132,6 +133,10 @@ process Compute_NODDI {
     file "${sid}__FIT_OD.nii.gz"
 
     script:
+    option_noddi=""
+    if (params.load_kernels) {
+      option_noddi="--load_kernels $params.load_kernels"
+    }
     """
     mean_ad=\$(<$mean_ad)
     mean_md=\$(<$mean_md)
@@ -139,7 +144,8 @@ process Compute_NODDI {
     scil_compute_NODDI.py $dwi $bvals $bvecs --mask $brain_mask\
         --para_diff \$mean_ad\
         --iso_diff \$mean_md\
-        --processes $params.noddi_nb_threads
+        --processes $params.noddi_nb_threads \
+        $option_noddi
 
     mv results/FIT_dir.nii.gz ${sid}__FIT_dir.nii.gz
     mv results/FIT_ICVF.nii.gz ${sid}__FIT_ICVF.nii.gz

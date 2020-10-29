@@ -38,7 +38,8 @@ Files should come out of the Tractoflow pipeline, with the following source:
 
 OPTIONAL ARGUMENTS (current value)
 
---noddi_nb_threads                         Number of threads to use for NODDI. Works best with 1. ($noddi_nb_threads).
+--noddi_nb_threads       Number of threads to use for NODDI. Works best with 1. ($noddi_nb_threads).
+--load_kernels           Input directory where the COMMIT kernels are located.
 
 NOTES
 
