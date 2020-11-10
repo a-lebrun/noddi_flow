@@ -1,0 +1,45 @@
+Nextflow NODDI pipeline
+=======================
+
+Run the NODDI pipeline, including estimation of the parameters
+
+USAGE
+
+nextflow run main.nf [OPTIONAL_ARGUMENTS] --input
+
+DESCRIPTION
+
+    --input=/path/to/[root]             Root folder containing multiple subjects, with the following files.
+
+                                        [input]
+                                        ├── sub1
+                                        │   ├── brain_mask.nii.gz
+                                        │   ├── bval
+                                        │   ├── bvec
+                                        │   └── dwi.nii.gz
+                                        └── sub2
+                                            ├── brain_mask.nii.gz
+                                            ├── bval
+                                            ├── bvec
+                                            └── dwi.nii.gz
+
+
+Files should come out of the Tractoflow pipeline, with the following source:
+- dwi.nii.gz: from Resample_DWI
+- brain_mask.nii.gz: from Resample_B0
+- bval/bvec: from Eddy_Topup
+
+
+OPTIONAL ARGUMENTS (current value)
+
+--nb_threads                            Number of threads to use for NODDI. Works best with 1. ($nb_threads).
+--para_diff                             Axial diffusivity (AD) in the Corpus Callosum. ($para_diff)
+--iso_diff                              Mean diffusivity (MD) in ventricles. ($iso_diff)
+--lambda1                               First regularization parameter. ($lambda1)
+--lambda2                               Second regularization parameter. ($lambda2)
+--b_thr                                 Limit value to consider that a b-value is on an existing shell. Above this limit, the b-value is placed on a new shell. This includes b0s values. ($b_thr)
+
+NOTES
+
+The intermediate working directory is, by default, set to './work'.
+To change it, use the '-w WORK_DIR' argument.
