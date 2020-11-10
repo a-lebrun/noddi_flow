@@ -12,7 +12,8 @@ if(params.help) {
                 "memory_limit":"$params.memory_limit",
                 "para_diff": "$params.para_diff",
                 "iso_diff": "$params.iso_diff",
-                "output_dir":"$params.output_dir"]
+                "output_dir":"$params.output_dir",
+                "b_thr":"$params.b_thr"]
 
     template = engine.createTemplate(usage.text).make(bindings)
 
@@ -45,6 +46,7 @@ log.info ""
 log.info "[NODDI fitting]"
 log.info "Parallel diff: $params.para_diff"
 log.info "Iso diff: $params.iso_diff"
+log.info "b-threshold: $params.b_thr"
 log.info ""
 
 log.info "Number of processes per tasks"
@@ -91,7 +93,8 @@ process Compute_Kernel {
     scil_compute_NODDI.py $dwi $bval $bvec --mask $brain_mask\
       --para_diff $params.para_diff\
       --iso_diff $params.iso_diff\
-      --processes $params.nb_threads \
+      --processes $params.nb_threads\
+      --b_thr $params.b_thr\
       --save_kernels kernels/ \
       --compute_only
     """
