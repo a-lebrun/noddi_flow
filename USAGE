@@ -35,6 +35,8 @@ OPTIONAL ARGUMENTS (current value)
 --nb_threads                            Number of threads to use for NODDI. Works best with 1. ($nb_threads).
 --para_diff                             Axial diffusivity (AD) in the Corpus Callosum. ($para_diff)
 --iso_diff                              Mean diffusivity (MD) in ventricles. ($iso_diff)
+--lambda1                               First regularization parameter. ($lambda1)
+--lambda2                               Second regularization parameter. ($lambda2)
 --b_thr                                 Limit value to consider that a b-value is on an existing shell. Above this limit, the b-value is placed on a new shell. This includes b0s values. ($b_thr)
 
 NOTES

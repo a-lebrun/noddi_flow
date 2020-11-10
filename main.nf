@@ -12,6 +12,8 @@ if(params.help) {
                 "memory_limit":"$params.memory_limit",
                 "para_diff": "$params.para_diff",
                 "iso_diff": "$params.iso_diff",
+                "lambda1": "$params.lambda1",
+                "lambda2": "$params.lambda2",
                 "output_dir":"$params.output_dir",
                 "b_thr":"$params.b_thr"]
 
@@ -46,6 +48,8 @@ log.info ""
 log.info "[NODDI fitting]"
 log.info "Parallel diff: $params.para_diff"
 log.info "Iso diff: $params.iso_diff"
+log.info "Lambda 1: $params.lambda1"
+log.info "Lambda 2: $params.lambda2"
 log.info "b-threshold: $params.b_thr"
 log.info ""
 
@@ -93,6 +97,8 @@ process Compute_Kernel {
     scil_compute_NODDI.py $dwi $bval $bvec --mask $brain_mask\
       --para_diff $params.para_diff\
       --iso_diff $params.iso_diff\
+      --lambda1 $params.lambda1\
+      --lambda2 $params.lambda2\
       --processes $params.nb_threads\
       --b_thr $params.b_thr\
       --save_kernels kernels/ \
