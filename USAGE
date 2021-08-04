@@ -13,11 +13,17 @@ DESCRIPTION
 
                                         [input]
                                         ├── sub1
+                                        │   ├── ad.nii.gz (for priors profile only)
+                                        │   ├── fa.nii.gz (for priors profile only)
+                                        │   ├── md.nii.gz (for priors profile only)
                                         │   ├── brain_mask.nii.gz
                                         │   ├── bval
                                         │   ├── bvec
                                         │   └── dwi.nii.gz
                                         └── sub2
+                                            ├── ad.nii.gz (for priors profile only)
+                                            ├── fa.nii.gz (for priors profile only)
+                                            ├── md.nii.gz (for priors profile only)
                                             ├── brain_mask.nii.gz
                                             ├── bval
                                             ├── bvec
