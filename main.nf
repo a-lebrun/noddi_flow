@@ -118,7 +118,7 @@ priors_for_mean
 
 process Mean_Priors {
   cpus 1
-  publishDir = "${params.output_dir}/Mean_Priorss"
+  publishDir = "${params.output_dir}/Mean_Priors"
 
   input:
     set sid, file(para_diff), file(iso_diff) from all_priors_for_mean
