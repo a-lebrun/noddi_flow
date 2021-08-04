@@ -130,9 +130,9 @@ process Mean_Priors {
   script:
     """
     cat $para_diff > all_para_diff.txt
-    awk '{ total += $1; count++ } END { print total/count }' all_para_diff.txt > para_diff.txt
+    awk '{ total += \$1; count++ } END { print total/count }' all_para_diff.txt > para_diff.txt
     cat $iso_diff > all_iso_diff.txt
-    awk '{ total += $1; count++ } END { print total/count }' all_iso_diff.txt > iso_diff.txt
+    awk '{ total += \$1; count++ } END { print total/count }' all_iso_diff.txt > iso_diff.txt
     """
 }
 
