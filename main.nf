@@ -107,7 +107,6 @@ process Compute_Priors {
       --fa_max $params.fa_max\
       --md_min $params.md_min\
       --roi_radius $params.roi_radius\
-      --roi_center $params.roi_center\
       --out_txt_1fiber ${sid}__para_diff.txt\
       --out_txt_ventricles ${sid}__iso_diff.txt\
     """
