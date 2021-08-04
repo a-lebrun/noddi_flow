@@ -72,6 +72,12 @@ if (params.input){
                        size: 4,
                        maxDepth:1,
                        flat: true) {it.parent.name}
+
+    in_data_priors = Channel
+        .fromFilePairs("$input/**/*{ad.nii.gz,fa.nii.gz,md.nii.gz}",
+                       size: 3,
+                       maxDepth:1,
+                       flat: true) {it.parent.name}
 }
 
 (all_data_for_kernels, data_for_noddi) = in_data
@@ -79,6 +85,53 @@ if (params.input){
         [tuple(sid, mask, bval, bvec, dwi),
          tuple(sid, mask, bval, bvec, dwi)]}
     .separate(2)
+
+process Compute_Priors {
+  cpus 1
+
+  input:
+    set sid, file(ad), file(fa), file(md) from in_data_priors
+
+  output:
+    set "Priors", ${sid}__para_diff.txt", "${sid}__iso_diff.txt" into priors_for_mean
+
+  when:
+    params.run_priors_only
+
+  script:
+    """
+    scil_compute_NODDI_priors.py $fa $ad $md\
+      --fa_min $params.fa_min\
+      --fa_max $params.fa_max\
+      --md_min $params.md_min\
+      --roi_radius $params.roi_radius\
+      --roi_center $params.roi_center\
+      --out_txt_1fiber ${sid}__para_diff.txt\
+      --out_txt_ventricles ${sid}__iso_diff.txt\
+    """
+}
+
+priors_for_mean
+    .groupTuple()
+    .set{all_priors_for_mean}
+
+process Mean_Priors {
+  cpus 1
+  publishDir = "${params.output_dir}/Mean_Priorss"
+
+  input:
+    set sid, file(para_diff), file(iso_diff) from all_priors_for_mean
+
+  output:
+    file "para_diff.txt"
+    file "iso_diff.txt"
+
+  script:
+    """
+    cat $para_diff | jq -s add/length > para_diff.txt
+    cat $iso_diff | jq -s add/length > iso_diff.txt
+    """
+}
 
 all_data_for_kernels.first().set{unique_data_for_kernels}
 
@@ -91,6 +144,9 @@ process Compute_Kernel {
 
   output:
     file("kernels/") into kernel_for_noddi
+
+  when:
+    !params.run_priors_only
 
   script:
     """
