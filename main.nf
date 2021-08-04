@@ -15,7 +15,13 @@ if(params.help) {
                 "lambda1": "$params.lambda1",
                 "lambda2": "$params.lambda2",
                 "output_dir":"$params.output_dir",
-                "b_thr":"$params.b_thr"]
+                "b_thr":"$params.b_thr",
+                "run_priors_only":"$params.run_priors_only",
+                "nb_subjects_for_priors":"$params.nb_subjects_for_priors",
+                "fa_min":"$params.fa_min",
+                "fa_max":"$params.fa_max",
+                "md_min":"$params.md_min",
+                "roi_radius":"$params.roi_center"]
 
     template = engine.createTemplate(usage.text).make(bindings)
 
@@ -51,6 +57,14 @@ log.info "Iso diff: $params.iso_diff"
 log.info "Lambda 1: $params.lambda1"
 log.info "Lambda 2: $params.lambda2"
 log.info "b-threshold: $params.b_thr"
+log.info ""
+log.info "[NODDI priors]"
+log.info "Run priors only: $params.run_priors_only"
+log.info "Nb subjects for priors: $params.nb_subjects_for_priors"
+log.info "FA min: $params.fa_min"
+log.info "FA max: $params.fa_max"
+log.info "MD min: $params.md_min"
+log.info "ROI radius: $params.roi_radius"
 log.info ""
 
 log.info "Number of processes per tasks"
