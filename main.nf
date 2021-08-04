@@ -86,11 +86,13 @@ if (params.input){
          tuple(sid, mask, bval, bvec, dwi)]}
     .separate(2)
 
+in_data_priors.take(params.nb_subjects_for_priors).set{sub_in_data_priors}
+
 process Compute_Priors {
   cpus 1
 
   input:
-    set sid, file(ad), file(fa), file(md) from in_data_priors
+    set sid, file(ad), file(fa), file(md) from sub_in_data_priors
 
   output:
     set "Priors", ${sid}__para_diff.txt", "${sid}__iso_diff.txt" into priors_for_mean
