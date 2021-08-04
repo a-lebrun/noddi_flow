@@ -95,7 +95,7 @@ process Compute_Priors {
     set sid, file(ad), file(fa), file(md) from sub_in_data_priors
 
   output:
-    set "Priors", ${sid}__para_diff.txt", "${sid}__iso_diff.txt" into priors_for_mean
+    set "Priors", "${sid}__para_diff.txt", "${sid}__iso_diff.txt" into priors_for_mean
 
   when:
     params.run_priors_only
