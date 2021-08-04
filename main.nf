@@ -21,7 +21,7 @@ if(params.help) {
                 "fa_min":"$params.fa_min",
                 "fa_max":"$params.fa_max",
                 "md_min":"$params.md_min",
-                "roi_radius":"$params.roi_center"]
+                "roi_radius":"$params.roi_radius"]
 
     template = engine.createTemplate(usage.text).make(bindings)
 
