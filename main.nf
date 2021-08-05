@@ -15,7 +15,13 @@ if(params.help) {
                 "lambda1": "$params.lambda1",
                 "lambda2": "$params.lambda2",
                 "output_dir":"$params.output_dir",
-                "b_thr":"$params.b_thr"]
+                "b_thr":"$params.b_thr",
+                "run_priors_only":"$params.run_priors_only",
+                "nb_subjects_for_priors":"$params.nb_subjects_for_priors",
+                "fa_min":"$params.fa_min",
+                "fa_max":"$params.fa_max",
+                "md_min":"$params.md_min",
+                "roi_radius":"$params.roi_radius"]
 
     template = engine.createTemplate(usage.text).make(bindings)
 
@@ -52,6 +58,14 @@ log.info "Lambda 1: $params.lambda1"
 log.info "Lambda 2: $params.lambda2"
 log.info "b-threshold: $params.b_thr"
 log.info ""
+log.info "[NODDI priors]"
+log.info "Run priors only: $params.run_priors_only"
+log.info "Nb subjects for priors: $params.nb_subjects_for_priors"
+log.info "FA min: $params.fa_min"
+log.info "FA max: $params.fa_max"
+log.info "MD min: $params.md_min"
+log.info "ROI radius: $params.roi_radius"
+log.info ""
 
 log.info "Number of processes per tasks"
 log.info "============================="
@@ -72,6 +86,12 @@ if (params.input){
                        size: 4,
                        maxDepth:1,
                        flat: true) {it.parent.name}
+
+    in_data_priors = Channel
+        .fromFilePairs("$input/**/*{ad.nii.gz,fa.nii.gz,md.nii.gz}",
+                       size: 3,
+                       maxDepth:1,
+                       flat: true) {it.parent.name}
 }
 
 (all_data_for_kernels, data_for_noddi) = in_data
@@ -79,6 +99,56 @@ if (params.input){
         [tuple(sid, mask, bval, bvec, dwi),
          tuple(sid, mask, bval, bvec, dwi)]}
     .separate(2)
+
+in_data_priors.take(params.nb_subjects_for_priors).set{sub_in_data_priors}
+
+process Compute_Priors {
+  cpus 1
+
+  input:
+    set sid, file(ad), file(fa), file(md) from sub_in_data_priors
+
+  output:
+    set val("Priors"), "${sid}__para_diff.txt", "${sid}__iso_diff.txt" into priors_for_mean
+
+  when:
+    params.run_priors_only
+
+  script:
+    """
+    scil_compute_NODDI_priors.py $fa $ad $md\
+      --fa_min $params.fa_min\
+      --fa_max $params.fa_max\
+      --md_min $params.md_min\
+      --roi_radius $params.roi_radius\
+      --out_txt_1fiber ${sid}__para_diff.txt\
+      --out_txt_ventricles ${sid}__iso_diff.txt\
+    """
+}
+
+priors_for_mean
+    .groupTuple()
+    .set{all_priors_for_mean}
+
+process Mean_Priors {
+  cpus 1
+  publishDir = "${params.output_dir}/Mean_Priors"
+
+  input:
+    set sid, file(para_diff), file(iso_diff) from all_priors_for_mean
+
+  output:
+    file "para_diff.txt"
+    file "iso_diff.txt"
+
+  script:
+    """
+    cat $para_diff > all_para_diff.txt
+    awk '{ total += \$1; count++ } END { print total/count }' all_para_diff.txt > para_diff.txt
+    cat $iso_diff > all_iso_diff.txt
+    awk '{ total += \$1; count++ } END { print total/count }' all_iso_diff.txt > iso_diff.txt
+    """
+}
 
 all_data_for_kernels.first().set{unique_data_for_kernels}
 
@@ -91,6 +161,9 @@ process Compute_Kernel {
 
   output:
     file("kernels/") into kernel_for_noddi
+
+  when:
+    !params.run_priors_only
 
   script:
     """

@@ -13,11 +13,17 @@ DESCRIPTION
 
                                         [input]
                                         ├── sub1
+                                        │   ├── ad.nii.gz (optional, only used with -profile priors)
+                                        │   ├── fa.nii.gz (optional, only used with -profile priors)
+                                        │   ├── md.nii.gz (optional, only used with -profile priors)
                                         │   ├── brain_mask.nii.gz
                                         │   ├── bval
                                         │   ├── bvec
                                         │   └── dwi.nii.gz
                                         └── sub2
+                                            ├── ad.nii.gz (optional, only used with -profile priors)
+                                            ├── fa.nii.gz (optional, only used with -profile priors)
+                                            ├── md.nii.gz (optional, only used with -profile priors)
                                             ├── brain_mask.nii.gz
                                             ├── bval
                                             ├── bvec
@@ -38,6 +44,17 @@ OPTIONAL ARGUMENTS (current value)
 --lambda1                               First regularization parameter. ($lambda1)
 --lambda2                               Second regularization parameter. ($lambda2)
 --b_thr                                 Limit value to consider that a b-value is on an existing shell. Above this limit, the b-value is placed on a new shell. This includes b0s values. ($b_thr)
+
+--run_priors_only                       Run priors only. ($run_priors_only)
+--nb_subjects_for_priors                Number of subjects to run priors. ($nb_subjects_for_priors)
+--fa_min                                Minimum FA threshold to be considered as WM. ($fa_min)
+--fa_max                                Maximum FA threshold to be considered as ventricules. ($fa_max)
+--md_min                                Minimum MD threshold to be considered as ventricules. ($md_min)
+--roi_radius                            Radius from the center used to estimate the priors. ($roi_radius)
+
+PROFILES (e.g. -profile priors)
+
+priors                                  Profile to run the priors only.
 
 NOTES
 
