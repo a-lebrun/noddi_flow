@@ -89,7 +89,7 @@ if (params.input){
 
     in_data_priors = Channel
         .fromFilePairs("$input/**/*{ad.nii.gz,fa.nii.gz,md.nii.gz,rd.nii.gz}",
-                       size: 3,
+                       size: 4,
                        maxDepth:1,
                        flat: true) {it.parent.name}
 }
@@ -121,7 +121,7 @@ process Compute_Priors {
       --fa_max $params.fa_max\
       --md_min $params.md_min\
       --roi_radius $params.roi_radius\
-      --out_txt_1fiber ${sid}__para_diff.txt\
+      --out_txt_1fiber_para ${sid}__para_diff.txt\
       --out_txt_ventricles ${sid}__iso_diff.txt\
     """
 }
