@@ -88,7 +88,7 @@ if (params.input){
                        flat: true) {it.parent.name}
 
     in_data_priors = Channel
-        .fromFilePairs("$input/**/*{ad.nii.gz,fa.nii.gz,md.nii.gz}",
+        .fromFilePairs("$input/**/*{ad.nii.gz,fa.nii.gz,md.nii.gz,rd.nii.gz}",
                        size: 3,
                        maxDepth:1,
                        flat: true) {it.parent.name}
@@ -106,7 +106,7 @@ process Compute_Priors {
   cpus 1
 
   input:
-    set sid, file(ad), file(fa), file(md) from sub_in_data_priors
+    set sid, file(ad), file(fa), file(rd), file(md) from sub_in_data_priors
 
   output:
     set val("Priors"), "${sid}__para_diff.txt", "${sid}__iso_diff.txt" into priors_for_mean
@@ -116,7 +116,7 @@ process Compute_Priors {
 
   script:
     """
-    scil_compute_NODDI_priors.py $fa $ad $md\
+    scil_NODDI_priors.py $fa $ad $rd $md\
       --fa_min $params.fa_min\
       --fa_max $params.fa_max\
       --md_min $params.md_min\
@@ -153,7 +153,7 @@ process Mean_Priors {
 all_data_for_kernels.first().set{unique_data_for_kernels}
 
 process Compute_Kernel {
-  cpus 1
+  cpus params.nb_threads
   publishDir = "${params.output_dir}/Compute_Kernel"
 
   input:
@@ -167,13 +167,13 @@ process Compute_Kernel {
 
   script:
     """
-    scil_compute_NODDI.py $dwi $bval $bvec --mask $brain_mask\
+    scil_NODDI_maps.py $dwi $bval $bvec --mask $brain_mask\
       --para_diff $params.para_diff\
       --iso_diff $params.iso_diff\
       --lambda1 $params.lambda1\
       --lambda2 $params.lambda2\
       --processes $params.nb_threads\
-      --b_thr $params.b_thr\
+      --tolerance $params.b_thr\
       --save_kernels kernels/ \
       --compute_only
     """
@@ -191,23 +191,23 @@ process Compute_NODDI {
       set sid, file(brain_mask), file(bval), file(bvec), file(dwi), file(kernels) from data_with_kernel_for_noddi
 
     output:
-      file "${sid}__FIT_dir.nii.gz"
-      file "${sid}__FIT_ISOVF.nii.gz"
-      file "${sid}__FIT_ICVF.nii.gz"
-      file "${sid}__FIT_OD.nii.gz"
+      file "${sid}__fit_dir.nii.gz"
+      file "${sid}__fit_FWF.nii.gz"
+      file "${sid}__fit_NDI.nii.gz"
+      file "${sid}__fit_ODI.nii.gz"
 
     script:
       """
-      scil_compute_NODDI.py $dwi $bval $bvec --mask $brain_mask\
+      scil_NODDI_maps.py $dwi $bval $bvec --mask $brain_mask\
         --para_diff $params.para_diff\
         --iso_diff $params.iso_diff\
         --processes $params.nb_threads \
         --load_kernels $kernels
 
-      mv results/FIT_dir.nii.gz ${sid}__FIT_dir.nii.gz
-      mv results/FIT_ICVF.nii.gz ${sid}__FIT_ICVF.nii.gz
-      mv results/FIT_ISOVF.nii.gz ${sid}__FIT_ISOVF.nii.gz
-      mv results/FIT_OD.nii.gz ${sid}__FIT_OD.nii.gz
+      mv results/fit_dir.nii.gz ${sid}__fit_dir.nii.gz
+      mv results/fit_FWF.nii.gz ${sid}__fit_FWF.nii.gz
+      mv results/fit_NDI.nii.gz ${sid}__fit_NDI.nii.gz
+      mv results/fit_ODI.nii.gz ${sid}__fit_ODI.nii.gz
 
       rm -rf results
       """
