@@ -192,9 +192,9 @@ process Compute_NODDI {
 
     output:
       file "${sid}__fit_dir.nii.gz"
-      file "${sid}__fit_FWF.nii.gz"
-      file "${sid}__fit_NDI.nii.gz"
-      file "${sid}__fit_ODI.nii.gz"
+      file "${sid}__fit_FWF.nii.gz" // FreeWater partie ISO
+      file "${sid}__fit_NDI.nii.gz" // Neurite density index - Intra cerebral volume fraction 
+      file "${sid}__fit_ODI.nii.gz" // nufo like - number of orientation (float 0-1) - correlé à nufo (1,2,3,4,5)
 
     script:
       """
