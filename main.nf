@@ -167,6 +167,10 @@ process Compute_Kernel {
 
   script:
     """
+    export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=
+    export OMP_NUM_THREADS=
+    export OPENBLAS_NUM_THREADS=1
+    
     scil_NODDI_maps.py $dwi $bval $bvec --mask $brain_mask\
       --para_diff $params.para_diff\
       --iso_diff $params.iso_diff\
@@ -185,7 +189,7 @@ data_for_noddi
 
 process Compute_NODDI {
     cpus params.nb_threads
-    memory params.memory_limit
+    memory { params.memory_limit * task.attempt }
 
     input:
       set sid, file(brain_mask), file(bval), file(bvec), file(dwi), file(kernels) from data_with_kernel_for_noddi
@@ -198,6 +202,10 @@ process Compute_NODDI {
 
     script:
       """
+      export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=
+      export OMP_NUM_THREADS=
+      export OPENBLAS_NUM_THREADS=1
+      
       scil_NODDI_maps.py $dwi $bval $bvec --mask $brain_mask\
         --para_diff $params.para_diff\
         --iso_diff $params.iso_diff\
