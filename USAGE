@@ -32,8 +32,12 @@ DESCRIPTION
 
 Files should come out of the Tractoflow pipeline, with the following source:
 - dwi.nii.gz: from Resample_DWI
-- brain_mask.nii.gz: from Resample_B0
+- brain_mask.nii.gz: from Extract_B0
 - bval/bvec: from Eddy_Topup
+
+We highly encourage you to use the script `tree_for_noddi_flow.sh` 
+from the combine flows repo (https://github.com/scilus/combine_flows) 
+to organise your input folder in order to run noddi_flow.
 
 
 OPTIONAL ARGUMENTS (current value)
