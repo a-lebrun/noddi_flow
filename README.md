@@ -39,20 +39,6 @@ If you are on MacOS or Windows, we recommend using the Docker container to run t
 Launch your Nextflow command with:
 `-with-docker scilus/scilus:2.1.0`
 
-:warning: WARNING :warning:
----------
-The official release 2.1.0 is **NOT** available now.
-
-Please, either build the singularity container using this command:
-
-`singularity build scilus_latest.sif docker://scilus/scilus:latest` 
-
-and then launch your Nextflow command with:
-`-with-singularity ABSOLUTE_PATH/scilus_latest.sif`
-
-Or launch your Nextflow command with docker:
-`-with-docker scilus/scilus:latest`
-
 Usage
 -----
 
