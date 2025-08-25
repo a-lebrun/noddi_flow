@@ -109,7 +109,7 @@ process Compute_Priors {
     set sid, file(ad), file(fa), file(rd), file(md) from sub_in_data_priors
 
   output:
-    set val("Priors"), "${sid}__para_diff.txt", "${sid}__iso_diff.txt" into priors_for_mean
+    set val("Priors"), "${sid}__para_diff.txt", "${sid}__iso_diff.txt", "${sid}__mask_1fiber.nii.gz', "${sid}__mask_ventricles.nii.gz" into priors_for_mean
 
   when:
     params.run_priors_only
@@ -123,6 +123,8 @@ process Compute_Priors {
       --roi_radius $params.roi_radius\
       --out_txt_1fiber_para ${sid}__para_diff.txt\
       --out_txt_ventricles ${sid}__iso_diff.txt\
+      --out_mask_1fiber ${sid}__mask_1fiber.nii.gz\
+      --out_mask_ventricles ${sid}__mask_ventricles.nii.gz\
     """
 }
 
