@@ -193,7 +193,7 @@ data_for_noddi
 
 process Compute_NODDI {
     cpus params.nb_threads
-    memory { params.memory_limit * task.attempt }
+    memory params.memory_limit
 
     input:
       set sid, file(brain_mask), file(bval), file(bvec), file(dwi), file(kernels) from data_with_kernel_for_noddi
